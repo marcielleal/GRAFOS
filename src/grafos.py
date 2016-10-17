@@ -1,17 +1,21 @@
 #!/usr/bin/env python
 #encoding: utf-8
 
+import copy
+
 class Node(object):
 	def __init__(self,data,adjacentes=None):
 		self.data=data
 		self.cor='W'
 		self.adj=adjacentes
-		if(adjacentes==None): self.adj=[]
-
+		if(adjacentes==None): 
+			self.adj=[]
 	def __str__(self):
 		return str(self.data)
 	def __repr__(self):
 		return str(self.data)
+	def __eq__(self,other):
+		return (other.data==self.data)
 
 class Graph(object):
 	def __init__(self):
@@ -28,32 +32,36 @@ class Graph(object):
 		if(lista!=None):
 			for no in lista:
 				self.nodes.append(no)
+	def getNode(self,key):
+		for no in self.nodes:
+			if(no==key):
+				return no
 
 def invert(grafo):
+	novoGrafo=copy.deepcopy(grafo)
 	for no in grafo.nodes:
-		no.cor='W'
+		novoGrafo.getNode(no).adj=[]
+
 	for no in grafo.nodes:
-		no.cor='B'
 		for adjacente in no.adj:
-			if(adjacente.cor!='B'):
-				adjacente.adj.append(no)
-				
-		no.adj=[node for node in no.adj if node.cor=='B']
+			#if(not adjacente.adj.__contains__(no)):
+			novoGrafo.getNode(adjacente).adj.append(novoGrafo.getNode(no))
+	return novoGrafo
 
 def quadrado(grafo):
-	for no in grafo.nodes:
-		no.cor='W'
+	novoGrafo=copy.deepcopy(grafo)
+	
+	index=0
 	for no in grafo.nodes:
 		lista=[]
 		for adjNo in no.adj:
-			if(adjNo.cor!='B'):
-				for adjAdj in adjNo.adj:
-					if(not no.adj.__contains__(adjAdj)):
-						adjAdj.cor='B'
-						lista.append(adjAdj)
-		no.adj+=lista
+			for adjAdj in adjNo.adj:
+				if(not no.adj.__contains__(adjAdj) and no.data!=adjAdj.data):
+					lista.append(adjAdj)
 		
-
+		novoGrafo.nodes[index].adj+=lista
+		index+=1
+	return novoGrafo
 
 teste=Graph()
 n1=Node(12)
@@ -61,13 +69,17 @@ n2=Node(13)
 n3=Node(14)
 n4=Node(15)
 n1.adj.append(n2)
-n1.adj.append(n3)
+#n1.adj.append(n3)
+#n1.adj.append(n4)
 n2.adj.append(n3)
-n3.adj.append(n4)
-n4.adj.append(n1)
+n3.adj.append(n1)
+#n4.adj.append(n1)
+#n2.adj.append(n1)
 
 teste.addNodes(n1,n2,n3,n4)
 #teste.nodes.append(Node(14))
 print str(teste)+'\n\n'
-quadrado(teste)
-print teste
+print str(quadrado(teste))+'\n\n'
+print str(invert(teste))+'\n\n'
+print str(teste)
+
