@@ -17,9 +17,13 @@ int imprime(int i,int first){
 	return 0;
 }
 int main(void){
-	int n,m,k,a,b,i,j,l;
+	int n,m,k,a,b,i,j,l,kk=0;
 	while((fscanf(stdin, "%d %d %d",&n,&m,&k))!=EOF){
-		zera();
+		if(kk){
+			zera();
+			printf("\n");
+		}else kk=1;
+
 		for(i=1;i<=m;++i){
 			fscanf(stdin,"%d %d",&a, &b);
 			matriz[a][b]=1;
@@ -56,7 +60,6 @@ int main(void){
 
 		if(first)
 			printf("0");
-		printf("\n");
 	}
 	return 0;
 }
