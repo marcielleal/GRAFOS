@@ -1,0 +1,5 @@
+Euler path-> caminho que visita todas as arestas uma única vez
+		nenhuma ou 2 arestas podem ter grau ímpar, as demais devem ter 
+		grau par <-> grafo possui caminho euleriano
+
+
