@@ -9,10 +9,10 @@
 #include <string.h>
 
 #define MAX 27
-#define tamPal 100000
+#define tamPal 1000
 
-int graph[MAX][MAX], visited[MAX]={0}, in[MAX],out[MAX];
-char palavra[tamPal];
+unsigned int graph[MAX][MAX], visited[MAX], in[MAX],out[MAX];
+unsigned char palavra[tamPal];
 
 void dfs(int cur){
 	visited[cur]=1;
@@ -25,14 +25,27 @@ void dfs(int cur){
 	}
 }
 
+int isEulerianPath(){
+	if(!isStronglyConnected()){
+		return 0;
+	}
+
+	for(i=0;i<MAX;++i){
+		if(in[i]!=out[i])
+			return 0;
+	}
+	return 1;
+}
+
 int main(void){
-	int n,i,j,x,y,t;
+	unsigned int n,i,j,x,y,t;
 
 	scanf("%d",&t);
 	while(t--){
 		scanf("%d",&n);
 		
 		memset(graph, 0, sizeof(graph));
+		memset(visited, 0 , sizeof(visited));
 		memset(in, 0, sizeof(in));
 		memset(out, 0, sizeof(out));
 		
@@ -40,45 +53,19 @@ int main(void){
 			scanf("%s",palavra);
 			x=palavra[0]-'a';
 			y=palavra[strlen(palavra)-1]-'a';
-			//printf(" %c %c\n",palavra[strlen(palavra)-2],y+'a');
-			//printf("%s\n",palavra );
-			//printf("%c %c\n",x+97,y+97 );
-			graph[x][y]++;//=++graph[y][x];
-			out[x] = 1;
-			in[y] = 1;
+			if(x!=y)
+				graph[x][y]++;
+			out[x]++;
+			in[y]++;
 		}
 
-		int quantImpares=0,grau;
-		for(i=0;i<MAX;++i){
-			grau=0;
-			for(j=0;j<MAX;++j)
-				if(graph[i][j] && i!=j) grau+=graph[i][j];
-			if(grau%2==1){//printf("%c %c\n",i+'a',j+'a'); 
-			++quantImpares;}
-		}
-
-		if(quantImpares!=0 && quantImpares!=2){
-			printf("The door cannot be opened.\n");
-			continue;
-		}
-
-		memset(visited, 0 , sizeof(visited));
 		
-		//Encontrar um i que exista no grafo
-
-		for(i=0;i<MAX &&!(out[i]||in[i]);i++);
 		
-		dfs(i);
-
-		int isNotConnected=0;
-		for(i=0;i<MAX && !isNotConnected;++i)
-			if((in[i]||out[i])&&!visited[i])
-				isNotConnected=1;
-		
-		if(isNotConnected)
-			printf("The door cannot be opened.\n");
-		else
+		if(isEulerianPath())
 			printf("Ordering is possible.\n");
+		else
+			printf("The door cannot be opened.\n");
+			
 	}
 	return 0;
 }
