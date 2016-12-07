@@ -1,7 +1,7 @@
 /**
-  * Considerando cada vértice sendo um número (0 a 6) e as arestas sendo
-  * as peças. Se conseguirmos achar um caminho euleriano (caminho no qual
-  * só uma peça [aresta] é visitada), acharemos a solução do problema. :)
+  * Considerando cada vértice sendo uma letra e as arestas sendo
+  * a "palavra". Se conseguirmos achar um caminho euleriano (caminho no qual
+  * só uma palavra [aresta] é visitada), acharemos a solução do problema. :)
   * @author Marciel Leal
   */
 
@@ -11,31 +11,56 @@
 #define MAX 27
 #define tamPal 1000
 
-unsigned int graph[MAX][MAX], visited[MAX], in[MAX],out[MAX];
+unsigned int graph[MAX][MAX], in[MAX],out[MAX];
+unsigned int transgraph[MAX][MAX],tin[MAX],tout[MAX];
+unsigned int visited[MAX];
 unsigned char palavra[tamPal];
 
-void dfs(int cur){
+void dfs(unsigned int temp[MAX][MAX], unsigned int cur){
 	visited[cur]=1;
 	int i;
 	for(i=0;i<MAX;++i){
 		//Se esta no grafo e se nao estiver sido visitado	
-		if(graph[cur][i]>0 && visited[i]==0){
-			dfs(i);
+		if(temp[cur][i]>0 && visited[i]==0){
+			dfs(temp,i);
 		}
 	}
 }
 
-int isEulerianPath(){
-	if(!isStronglyConnected()){
-		return 0;
-	}
+int isStronglyConnected(){
+	int i;
+	for(i=0;i<MAX;++i)
+		if(out[i])
+			break;
 
-	for(i=0;i<MAX;++i){
-		if(in[i]!=out[i])
+	memset(visited, 0 , sizeof(visited));
+	dfs(graph,i);
+    
+	for(i=0;i<MAX;++i)
+		if(out[i] && !visited[i])
 			return 0;
-	}
+
+    memset(visited, 0 , sizeof(visited));
+    dfs(transgraph,i);
+
+    for(i=0;i<MAX;++i)
+		if(tout[i] && !visited[i])
+			return 0;
 	return 1;
 }
+
+int isEulerianPath(){
+	int i;
+
+	if(isStronglyConnected()){
+		for(i=0;i<MAX;++i)
+			if(in[i]!=out[i])
+				return 0;
+		return 1;
+	}
+	return 0;
+}
+
 
 int main(void){
 	unsigned int n,i,j,x,y,t;
@@ -45,7 +70,8 @@ int main(void){
 		scanf("%d",&n);
 		
 		memset(graph, 0, sizeof(graph));
-		memset(visited, 0 , sizeof(visited));
+		memset(transgraph, 0, sizeof(transgraph));
+		
 		memset(in, 0, sizeof(in));
 		memset(out, 0, sizeof(out));
 		
@@ -53,14 +79,17 @@ int main(void){
 			scanf("%s",palavra);
 			x=palavra[0]-'a';
 			y=palavra[strlen(palavra)-1]-'a';
-			if(x!=y)
+			if(x!=y){
 				graph[x][y]++;
+				transgraph[y][x]++;
+			}
 			out[x]++;
+			tin[x]++;
+			tout[y]++;
 			in[y]++;
+
 		}
 
-		
-		
 		if(isEulerianPath())
 			printf("Ordering is possible.\n");
 		else
