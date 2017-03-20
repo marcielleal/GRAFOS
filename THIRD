@@ -1,5 +1,31 @@
+Matching -> um conjunto de arestas sem vértices em comum
+	* Matched -> vértice que tem uma aresta no matching
+	* maximal matching -> é um matching, tal que, se incluirmos uma aresta do grafo original ao matching, ele deixa de ser matching
+	* maximum matching -> é um matching máximo (podem haver mais de um)
+	* perfect matching -> é um matching que engloba todos os vértices do grafo original (perfect -> maximum) 
+		->é um minimum-size edge-cover (o perfect matching é sempre <= a um minimum size edge cover)
+	* near-perfect matching -> uma vértice é unmatched (só ocorre com número ímpar de V)
+
+	* alternating path-> caminho que começa num vértice unmatched e vai alternando
+	* augmenting path -> alternating path que termina com um unmatched
+
+
+Edge cover-> conjunto de arestas 
+	
+Cobertura de vértices-> É um conjunto de vértices que contém pelo menos uma das pontas de cada aresta.
+
+
+
+
+
 Euler path-> caminho que visita todas as arestas uma única vez
 		nenhuma ou 2 arestas podem ter grau ímpar, as demais devem ter 
 		grau par <-> grafo possui caminho euleriano
+
+
+
+Independent set-> conjunto de k vértices que não possui nenhuma aresta 					entre seus vértices(vide bipartite)
+
+Grafo complementar-> mesmo V e faz o compllementar de E
 
 
